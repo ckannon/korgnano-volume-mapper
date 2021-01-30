@@ -1,0 +1,5 @@
+bin/
+object/
+packages/
+.idea/
+obj/
