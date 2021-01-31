@@ -63,6 +63,8 @@ namespace KorgVolumeMapper
             }
             currentSelection = ccButtonsHash[newItem.CCNumber];
             currentSelection.Background = SelectionBrush;
+            textCCNumber.Text = newItem.CCNumber;
+            textMapping.Text = newItem.Mapping;
         }
 
         private void initializeHashes()
@@ -153,5 +155,12 @@ namespace KorgVolumeMapper
         {
             _midiManager.SetOutputDevice(e.AddedItems[0].ToString());
         }
+
+        private void ButtonMapTo_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new WindowCCRemap {Owner = this};
+            var showDialog = window.ShowDialog();
+        }
+
     }
 }
