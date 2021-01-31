@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CCMapping.cs" />
     <Compile Include="MixerList.xaml.cs">
       <DependentUpon>MixerList.xaml</DependentUpon>
     </Compile>

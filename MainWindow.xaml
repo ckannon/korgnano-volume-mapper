@@ -19,7 +19,6 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -94,16 +93,19 @@
                 </Grid>
             </GroupBox>
         </Grid>
-        <ListBox x:Name="listBox" HorizontalAlignment="Left" Margin="6,253,0,26" Width="216" SelectionChanged="listBox_SelectionChanged">
+        <ListBox x:Name="listBox" Padding="0" HorizontalAlignment="Left" Margin="6,253,0,26" Width="216" SelectionChanged="listBox_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding CCNumber}" />
-                        <TextBlock Text="{Binding Mapping}" />
+                        <TextBlock Grid.Column="0" Text="{Binding CCNumber}" />
+                        <TextBlock Grid.Column="2" Text="{Binding Mapping.MixerName}" />
+                        <TextBlock Grid.Column="3" Text="{Binding Mapping.MixerFunction}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

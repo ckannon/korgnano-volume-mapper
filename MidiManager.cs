@@ -49,7 +49,7 @@ namespace KorgVolumeMapper
 
         private void OnEventReceived(object sender, MidiEventReceivedEventArgs e)
         {
-            EventMapper.MapMidiEvent(e.Event);
+            _eventMapper.MapMidiEvent(e.Event);
         }
 
         public bool SetOutputDevice(string deviceName)
