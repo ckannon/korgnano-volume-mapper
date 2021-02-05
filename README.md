@@ -10,8 +10,13 @@ WIP.
 ## Current features
 - catches CC midi input from any bound device
 - if CC 0 is adjusted (0, 127 range) it will modify System Volume
-- supports application PIDs, but no way yet to map CC numbers to them
+- supports regex for application names
+- support system volume adjustment
+- support current window volume adjustment
+- allows remapping of CC range inputs to any volume control
 
 ## Next
-- allow remapping of CC range inputs to a application volume
-- allow mapping of a CC toggle input to an application mute/unmute
+- allow mapping of a CC toggle input to an application / system mute/unmute
+- allow saving of mappings to file and load back from file on startup
+- add to taskbar minimized, start on startup
+
