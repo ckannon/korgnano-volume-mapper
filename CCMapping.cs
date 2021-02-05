@@ -22,7 +22,7 @@ namespace KorgVolumeMapper
 
         public CCMapping()
         {
-            Mapping = new Mapping {MixerFunction = MixerFunction.None, MixerName = "N/A"};
+            Mapping = new Mapping {MixerFunction = MixerFunction.None, MixerMatchString = "N/A"};
         }
 
         public CCMapping(string ccNumber, Mapping mapping)
@@ -34,14 +34,14 @@ namespace KorgVolumeMapper
         public CCMapping(string ccNumber, MixerFunction func, string mixer)
         {
             CCNumber = ccNumber;
-            Mapping = new Mapping {MixerFunction = func, MixerName = mixer};
+            Mapping = new Mapping {MixerFunction = func, MixerMatchString = mixer};
         }
     }
 
     public class Mapping
     {
         public ControlType CCType { get; set; }
-        public string MixerName { get; set; }
+        public string MixerMatchString { get; set; }
         
         public MixerFunction MixerFunction { get; set; }
 
@@ -49,10 +49,10 @@ namespace KorgVolumeMapper
         {
         }
 
-        public Mapping(ControlType ccType, string mixerName, MixerFunction mixerFunction)
+        public Mapping(ControlType ccType, string mixerMatchString, MixerFunction mixerFunction)
         {
             CCType = ccType;
-            MixerName = mixerName;
+            MixerMatchString = mixerMatchString;
             MixerFunction = mixerFunction;
         }
     }

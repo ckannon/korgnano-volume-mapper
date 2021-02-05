@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Documents;
 using Melanchall.DryWetMidi.Devices;
 
 namespace KorgVolumeMapper
@@ -49,6 +50,7 @@ namespace KorgVolumeMapper
 
         private void OnEventReceived(object sender, MidiEventReceivedEventArgs e)
         {
+            Console.WriteLine($"Midi Event Received: {e.Event}");
             _eventMapper.MapMidiEvent(e.Event);
         }
 

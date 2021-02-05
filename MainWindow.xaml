@@ -104,7 +104,7 @@
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="{Binding CCNumber}" />
-                        <TextBlock Grid.Column="2" Text="{Binding Mapping.MixerName}" />
+                        <TextBlock Grid.Column="2" Text="{Binding Mapping.MixerMatchString}" />
                         <TextBlock Grid.Column="3" Text="{Binding Mapping.MixerFunction}" />
                     </Grid>
                 </DataTemplate>

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,17 +18,17 @@ namespace KorgVolumeMapper
         private List<CCMapping> ccItems = new List<CCMapping>();
         private Button currentSelectionButton;
         private CCMapping currentSelectionItem;
-        private readonly SolidColorBrush SelectionBrush = new SolidColorBrush(Color.FromRgb(0,50,50));
+        private readonly SolidColorBrush SelectionBrush = new SolidColorBrush(Color.FromRgb(0, 50, 50));
         private Brush UnselectedBrush;
         private EventMapper _eventMapper;
         private MidiManager _midiManager;
-        
+
         public MainWindow()
         {
             InitializeComponent();
             InitializeCCMappings();
             InitializeHashes();
-            
+
             _eventMapper = new EventMapper(ccItems);
             _midiManager = new MidiManager(_eventMapper);
             InitializeButtons();
@@ -37,7 +39,7 @@ namespace KorgVolumeMapper
         {
             if (e.Source is Button button)
             {
-                SelectCCByButton((string)button.Content);
+                SelectCCByButton((string) button.Content);
             }
         }
 
@@ -47,13 +49,14 @@ namespace KorgVolumeMapper
             listBox.SelectedItem = mappingHash[cc];
             listBox.ScrollIntoView(listBox.SelectedItem);
         }
-        
+
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.RemovedItems.Count > 0)
             {
                 UnselectListItem((CCMapping) e.RemovedItems[0]);
-            } 
+            }
+
             if (e.AddedItems.Count > 0)
             {
                 SelectListItem((CCMapping) e.AddedItems[0]);
@@ -66,7 +69,7 @@ namespace KorgVolumeMapper
             currentSelectionButton = ccButtonsHash[newItem.CCNumber];
             currentSelectionButton.Background = SelectionBrush;
             textCCNumber.Text = newItem.CCNumber;
-            textMapping.Text = newItem.Mapping.MixerName + "|" + newItem.Mapping.MixerFunction;
+            textMapping.Text = newItem.Mapping.MixerMatchString + "|" + newItem.Mapping.MixerFunction;
             currentSelectionItem = newItem;
         }
 
@@ -82,10 +85,12 @@ namespace KorgVolumeMapper
 
         private void InitializeCCMappings()
         {
-                        ccItems = new List<CCMapping>
+            ccItems = new List<CCMapping>
             {
-                new CCMapping() {CCNumber = "0", Mapping = new Mapping(ControlType.Range, "System Volume", MixerFunction.Volume)},
-                new CCMapping() {CCNumber = "1"},
+                new CCMapping()
+                    {CCNumber = "0", Mapping = new Mapping(ControlType.Range, "System Volume", MixerFunction.Volume)},
+                new CCMapping()
+                    {CCNumber = "1", Mapping = new Mapping(ControlType.Range, "Current Window", MixerFunction.Volume)},
                 new CCMapping() {CCNumber = "2"},
                 new CCMapping() {CCNumber = "3"},
                 new CCMapping() {CCNumber = "4"},
@@ -136,14 +141,14 @@ namespace KorgVolumeMapper
                 new CCMapping() {CCNumber = "55"},
                 new CCMapping() {CCNumber = "71"}
             };
-            ccItems.Sort((a,b) => int.Parse(a.CCNumber).CompareTo(int.Parse(b.CCNumber)));
+            ccItems.Sort((a, b) => int.Parse(a.CCNumber).CompareTo(int.Parse(b.CCNumber)));
         }
-        
+
         private void InitializeHashes()
         {
             ccItems.ForEach(mapping => mappingHash.Add(mapping.CCNumber, mapping));
         }
-        
+
         private void InitializeControls()
         {
             listBox.ItemsSource = ccItems;
@@ -161,6 +166,7 @@ namespace KorgVolumeMapper
                 {
                     UnselectedBrush = button.Background;
                 }
+
                 ccButtonsHash.Add(button.Content.ToString(), button);
             }
         }
@@ -168,6 +174,7 @@ namespace KorgVolumeMapper
         private void inputSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _midiManager.SetInputDevice(e.AddedItems[0].ToString());
+            Console.WriteLine("Connected input device.");
         }
 
         private void outputSelectionChanged(object sender, SelectionChangedEventArgs e)

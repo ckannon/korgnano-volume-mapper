@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace KorgVolumeMapper
@@ -17,7 +18,7 @@ namespace KorgVolumeMapper
                     MixerFunction =
                         (MixerFunction) Enum.Parse(typeof(MixerFunction), comboMixerFunction.Text, true),
                     CCType = (ControlType) Enum.Parse(typeof(ControlType), comboCCType.Text, true),
-                    MixerName = textMixerName.Text
+                    MixerMatchString = textMixerName.Text
                 },
                 CCNumber = CCNumber
             };
@@ -31,13 +32,17 @@ namespace KorgVolumeMapper
             CCNumber = mapping.CCNumber;
             comboMixerFunction.SelectedValue = mapping.Mapping.MixerFunction;
             comboCCType.SelectedValue = mapping.Mapping.CCType;
-            textMixerName.Text = mapping.Mapping.MixerName;
+            textMixerName.Text = mapping.Mapping.MixerMatchString;
 ;        }
 
         private void ButtonFind_OnClick(object sender, RoutedEventArgs e)
         {
             var window = new MixerList {Owner = this};
             window.ShowDialog();
+            if (!window.IsCancelled)
+            {
+                textMixerName.Text = $"^{window.SelectedProcessName}$";
+            }
         }
 
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
@@ -48,6 +53,15 @@ namespace KorgVolumeMapper
 
         private void ButtonOK_OnClick(object sender, RoutedEventArgs e)
         {
+            try
+            {
+               new Regex(CcMapping.Mapping.MixerMatchString);    
+            }
+            catch
+            {
+                var b = MessageBox.Show(this, $"Error in regular expression: {CcMapping.Mapping.MixerMatchString}","Error With Mixer Match String");
+                return;
+            }
             Close();
         }
     }

@@ -22,7 +22,7 @@ namespace KorgVolumeMapper
 
                 float volumeLevel;
                 masterVol.GetMasterVolumeLevelScalar(out volumeLevel);
-                return volumeLevel*100;
+                return volumeLevel * 100;
             }
             finally
             {
@@ -69,7 +69,7 @@ namespace KorgVolumeMapper
                 if (masterVol == null)
                     return;
 
-                masterVol.SetMasterVolumeLevelScalar(newLevel/100, Guid.Empty);
+                masterVol.SetMasterVolumeLevelScalar(newLevel / 100, Guid.Empty);
             }
             finally
             {
@@ -93,7 +93,7 @@ namespace KorgVolumeMapper
                 if (masterVol == null)
                     return -1;
 
-                float stepAmountScaled = stepAmount/100;
+                float stepAmountScaled = stepAmount / 100;
 
                 // Get the level
                 float volumeLevel;
@@ -107,7 +107,7 @@ namespace KorgVolumeMapper
                 masterVol.SetMasterVolumeLevelScalar(newLevel, Guid.Empty);
 
                 // Return the new volume level that was set
-                return newLevel*100;
+                return newLevel * 100;
             }
             finally
             {
@@ -173,7 +173,7 @@ namespace KorgVolumeMapper
                 deviceEnumerator = (IMMDeviceEnumerator) (new MMDeviceEnumerator());
                 deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
 
-                Guid IID_IAudioEndpointVolume = typeof (IAudioEndpointVolume).GUID;
+                Guid IID_IAudioEndpointVolume = typeof(IAudioEndpointVolume).GUID;
                 object o;
                 speakers.Activate(ref IID_IAudioEndpointVolume, 0, IntPtr.Zero, out o);
                 IAudioEndpointVolume masterVol = (IAudioEndpointVolume) o;
@@ -188,7 +188,7 @@ namespace KorgVolumeMapper
         }
 
         #endregion
-        
+
         #region Individual Application Volume Manipulation
 
         public static float? GetApplicationVolume(int pid)
@@ -198,9 +198,18 @@ namespace KorgVolumeMapper
                 return null;
 
             float level;
-            volume.GetMasterVolume(out level);
-            Marshal.ReleaseComObject(volume);
-            return level*100;
+            try
+            {
+                volume.GetMasterVolume(out level);
+            }
+            finally
+            {
+                if (volume != null)
+                {
+                    Marshal.ReleaseComObject(volume);
+                }
+            }
+            return level * 100;
         }
 
         public static bool? GetApplicationMute(int pid)
@@ -210,8 +219,18 @@ namespace KorgVolumeMapper
                 return null;
 
             bool mute;
-            volume.GetMute(out mute);
-            Marshal.ReleaseComObject(volume);
+            try
+            {
+                volume.GetMute(out mute);
+            }
+            finally
+            {
+                if (volume != null)
+                {
+                    Marshal.ReleaseComObject(volume);
+                }
+            }
+            
             return mute;
         }
 
@@ -222,8 +241,17 @@ namespace KorgVolumeMapper
                 return;
 
             Guid guid = Guid.Empty;
-            volume.SetMasterVolume(level/100, ref guid);
-            Marshal.ReleaseComObject(volume);
+            try
+            {
+                volume.SetMasterVolume(level / 100, ref guid);
+            }
+            finally
+            {
+                if (volume != null)
+                {
+                    Marshal.ReleaseComObject(volume);
+                }
+            }
         }
 
         public static void SetApplicationMute(int pid, bool mute)
@@ -233,8 +261,17 @@ namespace KorgVolumeMapper
                 return;
 
             Guid guid = Guid.Empty;
-            volume.SetMute(mute, ref guid);
-            Marshal.ReleaseComObject(volume);
+            try
+            {
+                volume.SetMute(mute, ref guid);
+            }
+            finally
+            {
+                if (volume != null)
+                {
+                    Marshal.ReleaseComObject(volume);
+                }
+            }
         }
 
         private static ISimpleAudioVolume GetVolumeObject(int pid)
@@ -250,7 +287,7 @@ namespace KorgVolumeMapper
                 deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
 
                 // activate the session manager. we need the enumerator
-                Guid IID_IAudioSessionManager2 = typeof (IAudioSessionManager2).GUID;
+                Guid IID_IAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
                 object o;
                 speakers.Activate(ref IID_IAudioSessionManager2, 0, IntPtr.Zero, out o);
                 mgr = (IAudioSessionManager2) o;
@@ -265,23 +302,16 @@ namespace KorgVolumeMapper
                 for (int i = 0; i < count; ++i)
                 {
                     IAudioSessionControl2 ctl = null;
-                    try
-                    {
-                        sessionEnumerator.GetSession(i, out ctl);
+                    sessionEnumerator.GetSession(i, out ctl);
 
-                        // NOTE: we could also use the app name from ctl.GetDisplayName()
-                        int cpid;
-                        ctl.GetProcessId(out cpid);
+                    // NOTE: we could also use the app name from ctl.GetDisplayName()
+                    int cpid;
+                    ctl.GetProcessId(out cpid);
 
-                        if (cpid == pid)
-                        {
-                            volumeControl = ctl as ISimpleAudioVolume;
-                            break;
-                        }
-                    }
-                    finally
+                    if (cpid == pid)
                     {
-                        if (ctl != null) Marshal.ReleaseComObject(ctl);
+                        volumeControl = ctl as ISimpleAudioVolume;
+                        break;
                     }
                 }
 
@@ -297,7 +327,6 @@ namespace KorgVolumeMapper
         }
 
         #endregion
-
     }
 
     #region Abstracted COM interfaces from Windows CoreAudio API
@@ -339,7 +368,8 @@ namespace KorgVolumeMapper
     internal interface IMMDevice
     {
         [PreserveSig]
-        int Activate(ref Guid iid, int dwClsCtx, IntPtr pActivationParams, [MarshalAs(UnmanagedType.IUnknown)] out object ppInterface);
+        int Activate(ref Guid iid, int dwClsCtx, IntPtr pActivationParams,
+            [MarshalAs(UnmanagedType.IUnknown)] out object ppInterface);
 
         // the rest is not implemented
     }
@@ -393,19 +423,22 @@ namespace KorgVolumeMapper
         int GetDisplayName([MarshalAs(UnmanagedType.LPWStr)] out string pRetVal);
 
         [PreserveSig]
-        int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)]string Value, [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
+        int SetDisplayName([MarshalAs(UnmanagedType.LPWStr)] string Value,
+            [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
 
         [PreserveSig]
         int GetIconPath([MarshalAs(UnmanagedType.LPWStr)] out string pRetVal);
 
         [PreserveSig]
-        int SetIconPath([MarshalAs(UnmanagedType.LPWStr)] string Value, [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
+        int SetIconPath([MarshalAs(UnmanagedType.LPWStr)] string Value,
+            [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
 
         [PreserveSig]
         int GetGroupingParam(out Guid pRetVal);
 
         [PreserveSig]
-        int SetGroupingParam([MarshalAs(UnmanagedType.LPStruct)] Guid Override, [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
+        int SetGroupingParam([MarshalAs(UnmanagedType.LPStruct)] Guid Override,
+            [MarshalAs(UnmanagedType.LPStruct)] Guid EventContext);
 
         [PreserveSig]
         int NotImpl1();
@@ -431,7 +464,7 @@ namespace KorgVolumeMapper
     }
 
     // http://netcoreaudio.codeplex.com/SourceControl/latest#trunk/Code/CoreAudio/Interfaces/IAudioEndpointVolume.cs
-    [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"),InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IAudioEndpointVolume
     {
         [PreserveSig]
@@ -458,7 +491,8 @@ namespace KorgVolumeMapper
         [PreserveSig]
         int SetMasterVolumeLevel(
             [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In] [MarshalAs(UnmanagedType.LPStruct)]
+            Guid eventContext);
 
         /// <summary>
         /// Sets the master volume level, expressed as a normalized, audio-tapered value.
@@ -469,7 +503,8 @@ namespace KorgVolumeMapper
         [PreserveSig]
         int SetMasterVolumeLevelScalar(
             [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In] [MarshalAs(UnmanagedType.LPStruct)]
+            Guid eventContext);
 
         /// <summary>
         /// Gets the master volume level of the audio stream, in decibels.
@@ -500,7 +535,8 @@ namespace KorgVolumeMapper
         int SetChannelVolumeLevel(
             [In] [MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
             [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In] [MarshalAs(UnmanagedType.LPStruct)]
+            Guid eventContext);
 
         /// <summary>
         /// Sets the normalized, audio-tapered volume level of the specified channel in the audio stream.
@@ -513,13 +549,14 @@ namespace KorgVolumeMapper
         int SetChannelVolumeLevelScalar(
             [In] [MarshalAs(UnmanagedType.U4)] UInt32 channelNumber,
             [In] [MarshalAs(UnmanagedType.R4)] float level,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In] [MarshalAs(UnmanagedType.LPStruct)]
+            Guid eventContext);
 
         /// <summary>
         /// Gets the volume level, in decibels, of the specified channel in the audio stream.
         /// </summary>
         /// <param name="channelNumber">The zero-based channel number.</param>
-		/// <param name="level">The volume level in decibels.</param>
+        /// <param name="level">The volume level in decibels.</param>
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetChannelVolumeLevel(
@@ -530,7 +567,7 @@ namespace KorgVolumeMapper
         /// Gets the normalized, audio-tapered volume level of the specified channel of the audio stream.
         /// </summary>
         /// <param name="channelNumber">The zero-based channel number.</param>
-		/// <param name="level">The volume level expressed as a normalized value between 0.0 and 1.0.</param>
+        /// <param name="level">The volume level expressed as a normalized value between 0.0 and 1.0.</param>
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetChannelVolumeLevelScalar(
@@ -546,7 +583,8 @@ namespace KorgVolumeMapper
         [PreserveSig]
         int SetMute(
             [In] [MarshalAs(UnmanagedType.Bool)] Boolean isMuted,
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In] [MarshalAs(UnmanagedType.LPStruct)]
+            Guid eventContext);
 
         /// <summary>
         /// Gets the muting state of the audio stream.
@@ -575,7 +613,8 @@ namespace KorgVolumeMapper
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int VolumeStepUp(
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In] [MarshalAs(UnmanagedType.LPStruct)]
+            Guid eventContext);
 
         /// <summary>
         /// Decreases the volume level by one step.
@@ -584,7 +623,8 @@ namespace KorgVolumeMapper
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int VolumeStepDown(
-            [In] [MarshalAs(UnmanagedType.LPStruct)] Guid eventContext);
+            [In] [MarshalAs(UnmanagedType.LPStruct)]
+            Guid eventContext);
 
         /// <summary>
         /// Queries the audio endpoint device for its hardware-supported functions.
@@ -598,9 +638,9 @@ namespace KorgVolumeMapper
         /// <summary>
         /// Gets the volume range of the audio stream, in decibels.
         /// </summary>
-		/// <param name="volumeMin">The minimum volume level in decibels.</param>
-		/// <param name="volumeMax">The maximum volume level in decibels.</param>
-		/// <param name="volumeStep">The volume increment level in decibels.</param>
+        /// <param name="volumeMin">The minimum volume level in decibels.</param>
+        /// <param name="volumeMax">The maximum volume level in decibels.</param>
+        /// <param name="volumeStep">The volume increment level in decibels.</param>
         /// <returns>An HRESULT code indicating whether the operation passed of failed.</returns>
         [PreserveSig]
         int GetVolumeRange(

@@ -10,9 +10,9 @@
         <Button x:Name="buttonCancel" Content="Cancel" Margin="190,122,0,0" HorizontalAlignment="Left" Width="75" Height="20" VerticalAlignment="Top" Click="ButtonCancel_OnClick"/>
         <Button x:Name="buttonOK" Content="OK" Margin="110,122,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Click="ButtonOK_OnClick"/>
         <ComboBox x:Name="comboMixerFunction" HorizontalAlignment="Left" Height="26" Margin="138,41,0,0" VerticalAlignment="Top" Width="198"/>
-        <Label x:Name="label1" Content="supports * wildcards" Margin="257,90,0,0" FontSize="8" RenderTransformOrigin="0.493,2.033" HorizontalAlignment="Left" Width="83" Height="21" VerticalAlignment="Top"/>
+        <Label x:Name="label1" Content="regex matches only" Margin="257,90,0,0" FontSize="8" RenderTransformOrigin="0.493,2.033" HorizontalAlignment="Left" Width="83" Height="21" VerticalAlignment="Top"/>
         <Label x:Name="label" Content="Select Mixer Function" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,41,0,0"/>
-        <Label x:Name="label_Copy" Content="Find Mixer Name" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="32,69,0,0"/>
+        <Label x:Name="label_Copy" Content="Find Mixer" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="32,69,0,0"/>
         <TextBox x:Name="textMixerName" HorizontalAlignment="Left" Height="23" Margin="138,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198"/>
         <Label x:Name="label_Copy1" Content="CC Type" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,10,0,0"/>
         <ComboBox x:Name="comboCCType" HorizontalAlignment="Left" Height="26" Margin="138,10,0,0" VerticalAlignment="Top" Width="198"/>
