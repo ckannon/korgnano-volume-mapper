@@ -51,7 +51,7 @@
             <Button x:Name="cc7" Content="7" HorizontalAlignment="Left" Height="24" Margin="718,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc45" Content="45" HorizontalAlignment="Left" Height="24" Margin="186,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc41" Content="41" HorizontalAlignment="Left" Height="24" Margin="148,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
-            <Button x:Name="cc42" Content="42" HorizontalAlignment="Left" Height="24" Margin="110,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
+            <Button x:Name="cc42" Content="42" HorizontalAlignment="Left" Height="24" Margin="112,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc44" Content="44" HorizontalAlignment="Left" Height="24" Margin="75,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc43" Content="43" HorizontalAlignment="Left" Height="24" Margin="37,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc46" Content="46" HorizontalAlignment="Left" Height="24" Margin="7,161,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
