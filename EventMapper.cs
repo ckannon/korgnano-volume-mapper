@@ -40,8 +40,11 @@ namespace KorgVolumeMapper
             switch (mapping.Mapping.MixerMatchString)
             {
                 case "System Volume":
-                    ActionSystem(mapping, cc);
+                    ActionSystemVolume(mapping, cc);
                     break;
+                case "System Mic Volume":
+                    ActionSystemMicVolume(mapping, cc);
+                    break;                
                 case "Current Window":
                     var curWindowCaption = GetCaptionOfActiveWindow();
                     var curWindowPids = GetPID($"^{curWindowCaption}$");
@@ -65,7 +68,7 @@ namespace KorgVolumeMapper
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern int GetWindowTextLength(IntPtr hWnd);
 
-        private string GetCaptionOfActiveWindow()
+        private static string GetCaptionOfActiveWindow()
         {
             var strTitle = string.Empty;
             var handle = GetForegroundWindow();
@@ -91,7 +94,7 @@ namespace KorgVolumeMapper
             return matches;
         }
 
-        private void ActionPID(IEnumerable<int> pids, CCMapping mapping, ControlChangeEvent cc)
+        private static void ActionPID(IEnumerable<int> pids, CCMapping mapping, ControlChangeEvent cc)
         {
             foreach (var pid in pids)
             {
@@ -114,7 +117,7 @@ namespace KorgVolumeMapper
             }
         }
 
-        private static void ActionSystem(CCMapping mapping, ControlChangeEvent cc)
+        private static void ActionSystemVolume(CCMapping mapping, ControlChangeEvent cc)
         {
             if (mapping.Mapping.MixerFunction == MixerFunction.Mute)
             {
@@ -125,6 +128,19 @@ namespace KorgVolumeMapper
 
             var newVol = (cc.ControlValue / 127f) * 100f;
             AudioManager.SetMasterVolume(newVol);
+        }
+        
+        private static void ActionSystemMicVolume(CCMapping mapping, ControlChangeEvent cc)
+        {
+            if (mapping.Mapping.MixerFunction == MixerFunction.Mute)
+            {
+                var isMuted = cc.ControlValue >= 1;
+                AudioManager.SetMasterMicVolumeMute(isMuted);
+                return;
+            }
+
+            var newVol = (cc.ControlValue / 127f) * 100f;
+            AudioManager.SetMasterMicVolume(newVol);
         }
     }
 }

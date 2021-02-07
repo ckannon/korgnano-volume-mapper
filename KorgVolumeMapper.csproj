@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Melanchall.DryWetMidi, Version=5.1.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>packages\Melanchall.DryWetMidi.5.1.2\lib\net45\Melanchall.DryWetMidi.dll</HintPath>
       <Private>True</Private>
@@ -48,6 +52,10 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="YamlDotNet, Version=9.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e">
+      <HintPath>packages\YamlDotNet.9.1.4\lib\net45\YamlDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -55,9 +63,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CCMapping.cs" />
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="MixerList.xaml.cs">
       <DependentUpon>MixerList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NotifyIconViewModel.cs" />
     <Compile Include="WindowCCRemap.xaml.cs">
       <DependentUpon>WindowCCRemap.xaml</DependentUpon>
     </Compile>
@@ -76,6 +86,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MixerList.xaml" />
+    <Page Include="NotifyIconResources.xaml" />
     <Page Include="WindowCCRemap.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -98,9 +109,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="trayicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="korg.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <ApplicationIcon>trayicon.ico</ApplicationIcon>
+  </PropertyGroup>
 </Project>

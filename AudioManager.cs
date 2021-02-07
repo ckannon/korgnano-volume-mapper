@@ -77,6 +77,24 @@ namespace KorgVolumeMapper
                     Marshal.ReleaseComObject(masterVol);
             }
         }
+        
+        public static void SetMasterMicVolume(float newLevel)
+        {
+            IAudioEndpointVolume masterVol = null;
+            try
+            {
+                masterVol = GetMasterMicVolumeObject();
+                if (masterVol == null)
+                    return;
+
+                masterVol.SetMasterVolumeLevelScalar(newLevel / 100, Guid.Empty);
+            }
+            finally
+            {
+                if (masterVol != null)
+                    Marshal.ReleaseComObject(masterVol);
+            }
+        }
 
         /// <summary>
         /// Increments or decrements the current volume level by the <see cref="stepAmount"/>.
@@ -137,6 +155,25 @@ namespace KorgVolumeMapper
                     Marshal.ReleaseComObject(masterVol);
             }
         }
+        
+        public static void SetMasterMicVolumeMute(bool isMuted)
+        {
+            IAudioEndpointVolume masterVol = null;
+            try
+            {
+                masterVol = GetMasterMicVolumeObject();
+                if (masterVol == null)
+                    return;
+
+                masterVol.SetMute(isMuted, Guid.Empty);
+            }
+            finally
+            {
+                if (masterVol != null)
+                    Marshal.ReleaseComObject(masterVol);
+            }
+        }
+        
 
         /// <summary>
         /// Switches between the master volume mute states depending on the current state
@@ -161,6 +198,28 @@ namespace KorgVolumeMapper
             {
                 if (masterVol != null)
                     Marshal.ReleaseComObject(masterVol);
+            }
+        }
+        
+        private static IAudioEndpointVolume GetMasterMicVolumeObject()
+        {
+            IMMDeviceEnumerator deviceEnumerator = null;
+            IMMDevice mic = null;
+            try
+            {
+                deviceEnumerator = (IMMDeviceEnumerator) (new MMDeviceEnumerator());
+                deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eCapture, ERole.eCommunications, out mic);
+
+                Guid IID_IAudioEndpointVolume = typeof(IAudioEndpointVolume).GUID;
+                object o;
+                mic.Activate(ref IID_IAudioEndpointVolume, 0, IntPtr.Zero, out o);
+                IAudioEndpointVolume masterVol = (IAudioEndpointVolume) o;
+                return masterVol;
+            }
+            finally
+            {
+                if (mic != null) Marshal.ReleaseComObject(mic);
+                if (deviceEnumerator != null) Marshal.ReleaseComObject(deviceEnumerator);
             }
         }
 
@@ -285,7 +344,7 @@ namespace KorgVolumeMapper
                 // get the speakers (1st render + multimedia) device
                 deviceEnumerator = (IMMDeviceEnumerator) (new MMDeviceEnumerator());
                 deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
-
+                
                 // activate the session manager. we need the enumerator
                 Guid IID_IAudioSessionManager2 = typeof(IAudioSessionManager2).GUID;
                 object o;

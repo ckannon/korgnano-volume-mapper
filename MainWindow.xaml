@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KorgVolumeMapper"
         mc:Ignorable="d"
-        Title="MainWindow" Height="545.126" Width="800" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight">
+        Title="Korg Volume Mapper" Icon="trayicon.ico" WindowStyle="SingleBorderWindow" Height="545.126" Width="800" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight" StateChanged="DataWindow_Changed" Closing="DataWindow_Closing">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Template">
@@ -24,12 +24,23 @@
         </Style>
     </Window.Resources>
     <Grid Margin="5,0,5,0" Height="454" VerticalAlignment="Top">
-        <Label x:Name="label" Content="Midi Input Device" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="122"/>
-        <Label x:Name="label_Copy" Content="Midi Output Device" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="122"/>
-        <ComboBox x:Name="comboInputDevice" HorizontalAlignment="Left" Margin="132,14,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="inputSelectionChanged"/>
-        <ComboBox x:Name="comboOutputDevice" HorizontalAlignment="Left" Margin="132,41,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="outputSelectionChanged"/>
-        <Image x:Name="image" Height="176" Margin="0,72,0,0" VerticalAlignment="Top" Source="korg.png" Stretch="Fill" Width="790"/>
-        <Grid x:Name="parentGrid" Margin="0,0,0,205">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Run On Startup" Click="RunOnStartup_Click" />
+                    <MenuItem Header="_Don't Run On Startup" Click="DontRunOnStartup_Click"/>
+                    <Separator />
+                    <MenuItem Header="_Exit" Click="Exit_Click"/>
+                </MenuItem>
+            </Menu>
+            <TextBox AcceptsReturn="True" Margin="0,0,0,10" />
+        </DockPanel>
+        <Label x:Name="label" Content="Midi Input Device" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="122"/>
+        <Label x:Name="label_Copy" Content="Midi Output Device" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" Width="122"/>
+        <ComboBox x:Name="comboInputDevice" HorizontalAlignment="Left" Margin="132,24,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="inputSelectionChanged"/>
+        <ComboBox x:Name="comboOutputDevice" HorizontalAlignment="Left" Margin="132,51,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="outputSelectionChanged"/>
+        <Image x:Name="image" Height="176" Margin="0,82,0,0" VerticalAlignment="Top" Source="korg.png" Stretch="Fill" Width="790"/>
+        <Grid x:Name="parentGrid" Margin="0,10,0,196">
             <Button x:Name="cc0" Content="0" HorizontalAlignment="Left" Height="24" Margin="262,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc1" Content="1" HorizontalAlignment="Left" Height="24" Margin="328,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc2" Content="2" HorizontalAlignment="Left" Height="24" Margin="393,221,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
@@ -82,7 +93,7 @@
             <Button x:Name="cc39" Content="39" HorizontalAlignment="Left" Height="24" Margin="695,138,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc55" Content="55" HorizontalAlignment="Left" Height="24" Margin="695,167,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
             <Button x:Name="cc71" Content="71" HorizontalAlignment="Left" Height="24" Margin="695,196,0,0" VerticalAlignment="Top" Width="30" Opacity="50" Click="cc_Click"/>
-            <GroupBox x:Name="groupBox" Header="Remap CC" HorizontalAlignment="Left" Height="184" Margin="227,245,0,-179" VerticalAlignment="Top" Width="291">
+            <GroupBox x:Name="groupBox" Header="Remap CC" HorizontalAlignment="Left" Height="164" Margin="227,255,0,-180" VerticalAlignment="Top" Width="291">
                 <Grid Margin="0,0,0,-13">
                     <Label x:Name="labelCCNumber" Content="CC Number" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="textCCNumber" HorizontalAlignment="Left" Height="23" Margin="86,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="51" IsEnabled="False"/>
@@ -93,7 +104,7 @@
                 </Grid>
             </GroupBox>
         </Grid>
-        <ListBox x:Name="listBox" Padding="0" HorizontalAlignment="Left" Margin="6,253,0,26" Width="216" SelectionChanged="listBox_SelectionChanged">
+        <ListBox x:Name="listBox" Padding="0" HorizontalAlignment="Left" Margin="6,263,0,26" Width="216" SelectionChanged="listBox_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,2">
