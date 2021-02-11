@@ -90,7 +90,7 @@ namespace KorgVolumeMapper
             }
             var allProcesses = cachedProcesses.ToList(); 
             var r = new Regex(appName);
-            var matches = allProcesses.Where(p => r.IsMatch(p.MainWindowTitle)).Select(p => p.Id).ToList();
+            var matches = allProcesses.Where(p => r.IsMatch(p.MainWindowTitle) | r.IsMatch(p.ProcessName)).Select(p => p.Id).ToList();
             return matches;
         }
 
